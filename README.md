@@ -1,0 +1,2 @@
+# simpleLive
+使用Linux服务器搭建直播服务器，并运用Apicloud平台简易快速的制作全功能直播APP。
