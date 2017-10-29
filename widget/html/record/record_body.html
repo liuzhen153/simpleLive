@@ -1,0 +1,261 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>直播</title>
+    <link rel="stylesheet" type="text/css" href="../../css/hui.css" />
+	<style>
+
+	</style>
+</head>
+<body>
+<div id="app" class="hui-width-full">
+	<div class="hui-func hui-flexbox-row hui-padding-all-5">
+	    <div @click="config" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active hui-position-relative">
+	        <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-turquoise hui-center-all hui-circle">
+	            <i class="hui-iconfont hui-icon-camera hui-font-color-white hui-font-size-24"></i>
+	        </span>
+	        <label class="hui-font-size-12">配置直播流</label>
+	    </div>
+	    <div @click="start" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active">
+	        <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-alizarin hui-center-all hui-circle">
+	            <i class="hui-iconfont hui-icon-radio-check hui-font-color-white hui-font-size-24"></i>
+	        </span>
+	        <label class="hui-font-size-12">开始推流</label>
+	    </div>
+	    <div @click="stop" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active">
+	        <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-wetAsphalt hui-center-all hui-circle">
+	            <i class="hui-iconfont hui-icon-guanbi2 hui-font-color-white hui-font-size-24"></i>
+	        </span>
+	        <label class="hui-font-size-12">停止推流</label>
+	    </div>
+	    <div @click="destroy" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active">
+	        <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-alizarin hui-center-all hui-circle">
+	            <i class="hui-iconfont hui-icon-close hui-font-color-white hui-font-size-24"></i>
+	        </span>
+	        <label class="hui-font-size-12">销毁推流</label>
+	    </div>
+	</div>
+	<div class="hui-func hui-flexbox-row hui-padding-all-5">
+		<div @click="toggle" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active hui-position-relative">
+	        <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-emerald hui-center-all hui-circle">
+	            <i class="hui-iconfont hui-icon-chexiao hui-font-color-white hui-font-size-24"></i>
+	        </span>
+	        <label class="hui-font-size-12">转换摄像头</label>
+	    </div>
+	    <div @click="flash" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active hui-position-relative">
+	        <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-turquoise hui-center-all hui-circle">
+	            <i class="hui-iconfont hui-icon-moban hui-font-color-white hui-font-size-24"></i>
+	        </span>
+	        <label class="hui-font-size-12">闪光灯-{{isflash}}</label>
+	    </div>
+	    <div @click="mute" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active hui-position-relative">
+	        <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-emerald hui-center-all hui-circle">
+	            <i class="hui-iconfont hui-icon-SSID hui-font-color-white hui-font-size-24"></i>
+	        </span>
+	        <label class="hui-font-size-12">静音-{{ismute}}</label>
+	    </div>
+	    <div @click="beauty" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active">
+	        <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-alizarin hui-center-all hui-circle">
+	            <i class="hui-iconfont hui-icon-ui hui-font-color-white hui-font-size-24"></i>
+	        </span>
+	        <label class="hui-font-size-12">美颜-{{isbeauty}}</label>
+	    </div>
+	</div>
+
+	<div class="hui-input-row hui-flexbox-row hui-col-middle hui-max-width-full hui-padding-all-8">
+	    <label class="hui-font-size-16 hui-font-color-ccc">地址：</label>
+	    <div class="hui-input-container hui-flexbox-item">
+	        <input type="text" v-model="pushurl" placeholder="推流rtmp地址" class="hui-input hui-width-full hui-background-color-transparent hui-border-outline-none hui-font-size-16 hui-vertical-align-middle" />
+	    </div>
+	</div>
+	<div class="hui-input-row hui-flexbox-row hui-col-middle hui-max-width-full hui-padding-all-8">
+	    <label class="hui-font-size-16 hui-font-color-ccc">分辨率：</label>
+	    <div class="hui-input-container hui-flexbox-item">
+	        <input type="text" v-model="resolution" placeholder="视频分辨率" class="hui-input hui-width-full hui-background-color-transparent hui-border-outline-none hui-font-size-16 hui-vertical-align-middle" />
+	    </div>
+	</div>
+	<div class="hui-input-row hui-flexbox-row hui-col-middle hui-max-width-full hui-padding-all-8">
+	    <label class="hui-font-size-16 hui-font-color-ccc">帧率：</label>
+	    <div class="hui-input-container hui-flexbox-item">
+	        <input type="text" v-model="pushfps" placeholder="帧率" class="hui-input hui-width-full hui-background-color-transparent hui-border-outline-none hui-font-size-16 hui-vertical-align-middle" />
+	    </div>
+	</div>
+</div>
+
+
+</body>
+<script type="text/javascript" src="../../script/hui.js"></script>
+<script type="text/javascript" src="../../script/vue.min.js"></script>
+<script type="text/javascript">
+// todo
+// 监听退出本页面，若正在直播则提示正在直播，只有关了直播才能返回
+    hui.ready(function(){
+  		var aliyunLive = hui.require('aliyunLive');
+  		var app = new Vue({
+  			el:'#app',
+  			data:{
+  				isflash:'否',
+  				ismute:'否',
+  				isbeauty:'否',
+  				pushurl:'rtmp://your-ip-address:1935/live/steam',
+  				resolution:'720',
+  				pushfps:30,
+                isRecord:0,
+                cameraPosition:'back'
+  			},
+  			methods:{
+                // 设置了fixedOn:'record_body'后会消除崩溃情况，但是摄像头显示的感觉就变了。
+  				config:function(){
+                    const that = this;
+  					aliyunLive.configStream({
+  					    rect: {
+  					         x: 0,
+  					         y: 300,
+                             w: 375,
+                             h: 300
+  					    },
+  					    url:this.pushurl,
+  					    bitRate: {
+  					          videoMaxBitRate: 1500 * 1000,
+  					          videoMinBitRate: 400 * 1000,
+  					          videoBitRate: 600 * 1000,
+  					          audioBitRate: 64 * 1000
+  					    },
+  					    fps: this.pushfps,
+  					    screenOrientation: 'vertical',
+  					    reconnectTimeout: 5,
+  					    videoResolution: this.resolution + 'p',
+  					    videoPreset: '1280*720',
+  					    cameraPosition: this.cameraPosition,
+                        fixedOn:'record_body',
+  					    fixed: true
+  						},function(ret,err) {
+                            that.isRecord = 1;
+  							err ? hui.toast(JSON.stringify(err)) : hui.toast(JSON.stringify(ret)) ;
+  						});
+  				},
+  				start:function(){
+                    if(this.isRecord == 0){
+                        hui.toast('请先配置直播流');
+                        return false;
+                    }
+                    this.isRecord = 2;
+  					aliyunLive.startStream(function(ret){
+  					    hui.toast(JSON.stringify(ret));
+  					});
+  				},
+  				stop:function(){
+                    // 判断是否进行了直播流配置
+                    if(this.isRecord == 0){
+                        hui.toast('请先配置直播流');
+                        return false;
+                    }
+                    // 判断是否已经开启推流
+                    if(this.isRecord == 1){
+                        hui.toast('请先开始推流');
+                        return false;
+                    }
+  					aliyunLive.stopStream(function(ret){
+  					    hui.toast(JSON.stringify(ret));
+  					});
+                    // 将推流状态归位
+                    this.isRecord = 1;
+  				},
+  				destroy:function(){
+                    if(this.isRecord == 0){
+                        hui.toast('请先配置直播流');
+                        return false;
+                    }
+  					aliyunLive.destroyStream();
+                    // 将直播状态归位
+                    this.isRecord = 0;
+  				},
+  				toggle:function(){
+                    // 判断是否进行了直播流配置
+                    if(this.isRecord == 0){
+                        hui.toast('请先配置直播流');
+                        return false;
+                    }
+  					aliyunLive.toggleCamera();
+                    this.cameraPosition = (this.cameraPosition == 'back') ? 'front' : 'back';
+  				},
+  				flash:function(){
+                    // 判断是否进行了直播流配置
+                    if(this.isRecord == 0){
+                        hui.toast('请先配置直播流');
+                        return false;
+                    }
+                    // 判断摄像头位置
+                    if (this.cameraPosition != 'back') {
+                        hui.toast('提示：只有后置摄像头支持闪光灯');
+                        return false;
+                    }
+                    // 切换闪光灯状态
+  					if (this.isflash == '否') {
+  						aliyunLive.setFlash({
+  						    flash: 'on'
+  						});
+  						this.isflash = '是';
+  					}else{
+  						aliyunLive.setFlash({
+  						    flash: 'off'
+  						});
+  						this.isflash = '否';
+  					}
+  				},
+  				mute:function(){
+                    // 判断是否进行了直播流配置
+                    if(this.isRecord == 0){
+                        hui.toast('请先配置直播流');
+                        return false;
+                    }
+                    // 切换静音状态
+  					if (this.ismute == '否') {
+  						aliyunLive.setMute({
+  						    mute: 'on'
+  						});
+  						this.ismute = '是';
+  					}else{
+  						aliyunLive.setMute({
+  						    mute: 'off'
+  						});
+  						this.ismute = '否';
+  					}
+  				},
+  				beauty:function(){
+                    // 判断是否进行了直播流配置
+                    if(this.isRecord == 0){
+                        hui.toast('请先配置直播流');
+                        return false;
+                    }
+                    // 切换美颜状态
+  					if (this.isbeauty == '否') {
+  						aliyunLive.setBeauty({
+  						    beauty: 'on'
+  						});
+  						this.isbeauty = '是';
+  					}else{
+  						aliyunLive.setBeauty({
+  						    beauty: 'off'
+  						});
+  						this.isbeauty = '否';
+  					}
+  				}
+  			}
+  		});
+
+      hui.addEventListener({
+          name: 'keyback'
+      }, function(ret, err) {
+          if (app.isRecord != 0) {
+              alert('请先销毁直播');
+              return false;
+          }
+      });
+
+    });
+</script>
+</html>

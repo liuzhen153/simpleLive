@@ -1,0 +1,245 @@
+<!-- hui html整页 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>播放</title>
+    <meta charset="utf-8" content="感谢百小僧开发这么好的UI框架" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1,minimum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link type="text/css" href="../../css/hui.css" rel="stylesheet" />
+    <style type="text/css">
+        body{
+            height:100vh;
+        }
+    </style>
+</head>
+<body class="hui-background-color-white">
+    <div id="app">
+        <div class="hui-func hui-flexbox-row hui-padding-all-5 hui-background-color-white">
+          <div @click="goplay" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active hui-position-relative">
+              <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-emerald hui-center-all hui-circle">
+                  <i class="hui-iconfont hui-icon-chexiao hui-font-color-white hui-font-size-24"></i>
+              </span>
+              <label class="hui-font-size-12">初始化</label>
+          </div>
+          <div @click="prepare" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active hui-position-relative">
+              <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-turquoise hui-center-all hui-circle">
+                  <i class="hui-iconfont hui-icon-moban hui-font-color-white hui-font-size-24"></i>
+              </span>
+              <label class="hui-font-size-12">准备</label>
+          </div>
+          <div @click="goplay" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active hui-position-relative">
+              <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-emerald hui-center-all hui-circle">
+                  <i class="hui-iconfont hui-icon-SSID hui-font-color-white hui-font-size-24"></i>
+              </span>
+              <label class="hui-font-size-12">播放</label>
+          </div>
+          <div @click="pause" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active">
+              <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-alizarin hui-center-all hui-circle">
+                  <i class="hui-iconfont hui-icon-ui hui-font-color-white hui-font-size-24"></i>
+              </span>
+              <label class="hui-font-size-12">暂停</label>
+          </div>
+      </div>
+      <div class="hui-func hui-flexbox-row hui-padding-all-5 hui-background-color-white">
+    		<div @click="getVideoWidth" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active hui-position-relative">
+    	        <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-emerald hui-center-all hui-circle">
+    	            <i class="hui-iconfont hui-icon-chexiao hui-font-color-white hui-font-size-24"></i>
+    	        </span>
+    	        <label class="hui-font-size-12">获取视频宽度</label>
+    	    </div>
+    	    <div @click="getVideoHeight" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active hui-position-relative">
+    	        <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-turquoise hui-center-all hui-circle">
+    	            <i class="hui-iconfont hui-icon-moban hui-font-color-white hui-font-size-24"></i>
+    	        </span>
+    	        <label class="hui-font-size-12">获取视频高度</label>
+    	    </div>
+    	    <div @click="mute" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active hui-position-relative">
+    	        <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-emerald hui-center-all hui-circle">
+    	            <i class="hui-iconfont hui-icon-SSID hui-font-color-white hui-font-size-24"></i>
+    	        </span>
+    	        <label class="hui-font-size-12">静音-{{ismute}}</label>
+    	    </div>
+            <div @click="destroyplay" class="hui-func-item hui-flexbox-item hui-text-align-center hui-touch-active">
+                <span class="hui-icon hui-display-block hui-margin-col-auto hui-width-height-45 hui-background-color-alizarin hui-center-all hui-circle">
+                    <i class="hui-iconfont hui-icon-ui hui-font-color-white hui-font-size-24"></i>
+                </span>
+                <label class="hui-font-size-12">销毁</label>
+            </div>
+    	</div>
+      <div class="hui-input-row hui-flexbox-row hui-col-middle hui-max-width-full hui-padding-all-8 hui-background-color-white">
+          <label class="hui-font-size-16 hui-font-color-ccc">地址：</label>
+          <div class="hui-input-container hui-flexbox-item">
+              <input type="text" v-model="url" placeholder="推流rtmp地址" class="hui-input hui-width-full hui-background-color-transparent hui-border-outline-none hui-font-size-16 hui-vertical-align-middle" />
+          </div>
+      </div>
+      <div class="hui-input-row hui-flexbox-row hui-col-middle hui-max-width-full hui-padding-all-8 hui-background-color-white">
+    	    <label class="hui-font-size-16 hui-font-color-ccc">超时时间：</label>
+    	    <div class="hui-input-container hui-flexbox-item">
+    	        <input type="text" v-model="timeout" placeholder="请求超时时间" class="hui-input hui-width-full hui-background-color-transparent hui-border-outline-none hui-font-size-16 hui-vertical-align-middle" />
+    	    </div>
+    	    <label @click="setTimeout" class="hui-font-size-14 hui-font-color-ccc hui-font-color-emerald">设置</label>
+    	</div>
+    </div>
+
+
+    <script type="text/javascript" src="../../script/hui.js"></script>
+    <script type="text/javascript" src="../../script/vue.min.js"></script>
+    <script type="text/javascript">
+    	hui.ready(function(){
+            var aliyunLive = hui.require('aliyunLive');
+            var app = new Vue({
+                el:'#app',
+                data:{
+                    url:'rtmp://your-ip-address:1935/live/steam',
+                    ismute:'否',
+                    timeout:5000
+                },
+                methods:{
+                    goplay:function(){
+                        var that = this;
+                    // 初始化播放器
+                     aliyunLive.init({
+                       rect: {
+                             x: 0,
+                             y: 100,
+                             w: hui.screenWidth,
+                             h: 500
+                        },
+                        fixed: true
+                        }, function(ret, err) {
+                            if(ret){
+                                hui.toast(JSON.stringify(ret));
+                            }
+                        });
+                    },
+                    prepare:function(){
+                        const that = this;
+                        // 准备播放
+                        aliyunLive.prepareToPlay({
+                            url:that.url
+                        }, function(ret, err) {
+                            if(ret && ret.status){
+                                hui.toast("MediaPlayer Prepare Ready");
+                            }
+                        });
+                    },
+                    playing:function(){
+                        // 播放
+                        aliyunLive.play();
+                    },
+                    pause:function(){
+                        // 暂停播放
+                        aliyunLive.pause();
+                    },
+                    destroyplay:function(){
+                        // 销毁播放器
+                        aliyunLive.destroy();
+                    },
+                    getVideoWidth:function() {
+                        //获取视频的宽度
+                        aliyunLive.getVideoWidth(function(ret){
+                            if(ret){
+                                hui.toast("Video width : " + ret.width);
+                            }
+                        });
+                    },
+                    getVideoHeight:function() {
+                        //获取视频高度
+                        aliyunLive.getVideoHeight(function(ret){
+                            if(ret){
+                                hui.toast("Video height : " + ret.height);
+                            }
+                        });
+                    },
+                    setTimeout:function() {
+                        const that = this;
+                        // 设置请求超时时间，暂时没用着
+                        aliyunLive.setTimeout({
+                            timeout:that.timeout
+                        });
+                    },
+                    setMediaType:function() {
+                        //设置媒体类型，0为直播（line），1为点播(vod)
+                        aliyunLive.setMediaType({
+                            type : 0
+                        });
+                    },
+                    mute:function() {
+                        // 是否静音
+                        if (this.ismute == '否') {
+                          aliyunLive.setMuteMode({
+                              isMute : true
+                          });
+                          this.ismute = '是';
+                        }else{
+                          aliyunLive.setMuteMode({
+                              isMute : false
+                          });
+                          this.ismute = '否';
+                        }
+                    },
+                    setVideoScalingMode:function() {
+                        // 视频缩放模式，0为等比缩放，1为剪切模式
+                        aliyunLive.setVideoScalingMode({
+                            mode : 1
+                        });
+                    },
+                    setDefaultDecoder:function() {
+                        // 设置默认解码器（由于不同手机硬件的差别，使用硬件解码器可能导致一些兼容性问题，所以在这里建议使用软件解码器）
+                        // 0为硬件解码，1为软件解码
+                        aliyunLive.setDefaultDecoder({
+                            type: 1
+                        });
+                    },
+                    setMaxBufferDuration:function() {
+                        // 设置缓冲时长
+                        aliyunLive.setMaxBufferDuration({
+                            duration : 10000 //10s
+                        });
+                    },
+                    addEventListener:function()
+                    {
+                        // 添加监听事件
+                        // errorCode:
+                        //     511 加载超时
+                        //     501 未知错误
+                        //     502 没有输入文件
+                        //     503 no surface
+                        //     504 视频资源或者网络不可用
+                        //     505 不支持此编码
+                        //     506 没有足够内存
+                        //     401 网络视频播放错误，没有网络或者网络状态不好的情况下播放网络视频会出现该错误
+                        //     402 没有优先级
+                        //     400 非法请求
+                        //     509 未认证
+                        //     510 资源访问失败
+                        aliyunLive.addEventListener(function(ret){
+                            alert(JSON.stringify(ret));
+                        });
+                    }
+                }
+            });
+
+            // 添加监听事件
+            aliyunLive.addEventListener(function(ret){
+                // 如果产生错误，则弹出错误信息
+                if (ret.eventName == 'error') {
+                    alert(JSON.stringify(ret));
+                }
+                // 如果completed，则销毁播放器
+                if (ret.eventName == 'completed') {
+                    app.destroyplay();
+                }
+            });
+
+            hui.addEventListener({
+                name: 'keyback'
+            }, function(ret, err) {
+                app.destroyplay();
+            });
+    	});
+    </script>
+</body>
+</html>

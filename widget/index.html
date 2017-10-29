@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>直播DEMO</title>
+    <link rel="stylesheet" type="text/css" href="./css/hui.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+<body class="hui-flexbox-col">
+    <header id="header" class="hui-header hui-min-height-40 hui-position-relative hui-background-color-turquoise hui-box-sizing-content-box">
+        <div class="hui-header-title hui-center-all hui-height-40 hui-width-full hui-position-absolute hui-font-color-white hui-height-40 hui-font-size-18">
+            直播demo
+        </div>
+        <span @click="help" class="hui-icon hui-position-relative hui-float-right hui-display-inline-block hui-zIndex-100 hui-height-40  hui-padding-col-8 hui-col-middle hui-background-color-turquoise-active">
+            <label class="hui-display-inline-block hui-font-color-white hui-font-size-14">说明</label>
+        </span>
+    </header>
+
+</body>
+<script type="text/javascript" src="./script/hui.js"></script>
+<script type="text/javascript" src="./script/vue.min.js"></script>
+<script type="text/javascript">
+    hui.ready(function () {
+            var app = new Vue({
+                el:'#header',
+                methods:{
+                    help:function(){
+                        hui.openContentFrame('dialog','./html/dialog.html',  [["#header"]]);
+                        hui.optimizeLocation('dialog');
+                    }
+                }
+            });
+            hui.openContentFrame('main', './html/main.html', [["#header"]]);
+            // 解决openWin切换性能问题，完美原生体验
+            hui.optimizeLocation('main');
+            hui.getPrefs(function(ret, err) {
+                if (ret.value == '') {
+                    hui.openContentFrame('dialog','./html/dialog.html',  [["#header"]]);
+                }
+            },'dialog');
+        });
+</script>
+</html>
