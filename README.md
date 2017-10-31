@@ -206,7 +206,7 @@
  我上传了一个`test.mp4`到`/tommy`下，使用命令查看`ffmpeg`运行情况
 
  ~~~
- ffmpeg -re -i /tommy/test.mp4 -vcodec libx264 -acodec aac -f flv rtmp://139.224.228.47:1935/live/steam
+ ffmpeg -re -i /tommy/test.mp4 -vcodec libx264 -acodec aac -f flv rtmp://my-ip:1935/live/steam
  ~~~
 
  在终端看到以下命令则证明推流成功：
